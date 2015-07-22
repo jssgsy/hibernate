@@ -9,7 +9,10 @@
         <property name="name" ></property>
         
         <!-- 映射集合set -->     
-        <!-- 用以存放集合属性值的表在这里指定，studentId为引用T_Student表主键的外键，而address用来存在集合里的值 --> 
+        <!-- 用以存放集合属性值的表在这里指定，studentId为引用T_Student表主键的外键，
+        	  而address用来存在集合里的值,这是通过element完成的功能 。
+        	 总结：存放集合属性值的表只需要三个地段：代理id，引用student的外键，存放实际值的address。
+        --> 
        	<set name="addressSet" table="T_StudentAddress">
        		<key column="studentId"></key>
        		<element type="string" column="address" ></element>
