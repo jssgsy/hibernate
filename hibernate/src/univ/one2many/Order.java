@@ -9,7 +9,7 @@ package univ.one2many;
 public class Order {
 
 	private Long id;
-	String orderNumber;
+	private String orderNumber;
 	private Customer customer;//建立多对一的关系
 	public Long getId() {
 		return id;

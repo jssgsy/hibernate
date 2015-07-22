@@ -14,10 +14,13 @@
 	<property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
 	
 	<property name="show_sql">true</property>
-	<mapping resource="univ/entity/Student.hbm.xml" />
-	<mapping resource="univ/entity/Teacher.hbm.xml" />
+	
+	<!-- 对集合set的映射测试操作 -->
+	<mapping resource="univ/setmapping/Student.hbm.xml" />
+	
 	<!-- 对单个表的测试操作 -->
 	<mapping resource="univ/single/Single.hbm.xml" />
+	
 	<!-- 对双向一对多配置的测试操作 -->
 	<mapping resource="univ/one2many/Customer.hbm.xml" />
 	<mapping resource="univ/one2many/Order.hbm.xml" />
