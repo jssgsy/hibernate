@@ -3,3 +3,5 @@
 .settings
 bin
 lib
+*.DS_Store
+target
