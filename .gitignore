@@ -1,7 +1,15 @@
-*.classpath
-*.project
+# eclipse
+.classpath
+.project
 .settings
-bin
-lib
-*.DS_Store
+
+# idea
+*.iml
+.idea
+
+# others
 target
+logs
+
+# mac
+*.DS_Store

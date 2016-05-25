@@ -20,17 +20,17 @@
 	<property name="hibernate.format_sql">true</property>
  	
 	<!-- 对集合set的映射测试操作 -->
-	<mapping resource="com/univ/setmapping/Student.hbm.xml" />
+	<mapping resource="hbm/Student.hbm.xml" />
 	
 	<!-- 对单个表的测试操作 -->
-	<mapping resource="com/univ/single/Single.hbm.xml" />
+	<mapping resource="hbm/Single.hbm.xml" />
 	
 	<!-- 对双向一对多配置的测试操作 -->
-	<mapping resource="com/univ/one2many/Customer.hbm.xml" />
-	<mapping resource="com/univ/one2many/Order.hbm.xml" />
+	<mapping resource="hbm/Customer.hbm.xml" />
+	<mapping resource="hbm/Order.hbm.xml" />
 
 	<!-- 对自身双向一对多关系表的测试操作 -->
-	<mapping resource="com/univ/self/example.hbm.xml" />
+	<mapping resource="hbm/example.hbm.xml" />
 </session-factory>
 
 </hibernate-configuration>

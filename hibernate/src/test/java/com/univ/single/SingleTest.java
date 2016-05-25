@@ -22,12 +22,14 @@ public class SingleTest {
 
 	@Test
 	public void save() {
-		Single single = new Single();
-		single.setName("bbb");
-		single.setAge(20);		
+
 		transaction = session.beginTransaction();
-		
-		System.out.println("before session.save()---------------------------");
+        Single single = new Single();
+       //使用代理主键，并且设置主键生成策略为increment时，程序会忽略setId,所以此句不起作用,仍然是新增而不是修改数据库中id为1的记录
+        single.setId((long) 1);
+        single.setName("aaa");
+        single.setAge(20);
+        System.out.println("before session.save()---------------------------");
 		/**
 		 * 只是计划执行，真正的sql执行是在事务提交的时候。
 		 * 其实此时也会执行sql语句，不过是 select max(id) from T_Single,用于计算插入记录的id
@@ -99,6 +101,7 @@ public class SingleTest {
 	/**
 	 * load()采取的是默认的延迟检索策略，如果加载一个对象是为了删除它或者和别的对象建立关联关系，用load；
 	 * 只有在访问single的非id属性时，才会执行select语句，否则整个过程（即使事务提交，session清除缓存）都不会有select语句的执行；
+	 * 延迟加载的对象在session关闭之后便不能再使用。
 	 */
 	@Test
 	public void load() {
@@ -112,20 +115,23 @@ public class SingleTest {
 		System.out.println("after single.getName()---------------------------");	
 		transaction.commit();
 		session.close();
+		System.out.println(single.getName());//此时不会有输出，session已经关闭
 	}
 	
 	/**
 	 * get()采取的是立即检索策略，如果加载一个对象是为了访问它的属性，用get
+	 * session关闭后还能访问get返回的对象内容。
 	 */
 	@Test
 	public void get() {
 		transaction = session.beginTransaction();
 		
-		session.get(Single.class, (long)1);//立即执行select语句
+		Single single = (Single) session.get(Single.class, (long)1);//立即执行select语句
 		System.out.println("after session.get()---------------------------");
 		
 		transaction.commit();
-		
+		session.close();
+		System.out.println(single.getName());
 	}
 	
 	

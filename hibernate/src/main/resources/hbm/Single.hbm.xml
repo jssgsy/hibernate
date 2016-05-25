@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+	
+<hibernate-mapping >
+	<class name="com.univ.single.Single" table="single" >
+		<id name="id" >
+			<!--使用代理主键，并且设置主键生成策略为increment时，程序会忽略setId-->
+			<generator class="increment"></generator>
+		</id>
+		<!-- 如果不对属性进行显示配置，则在数据库表中不会产生相应的列 -->
+        <property name="name" ></property>
+        <property name="age" ></property>
+        <property name="date" column="date" type="date"></property>      
+        
+	</class>
+</hibernate-mapping>
