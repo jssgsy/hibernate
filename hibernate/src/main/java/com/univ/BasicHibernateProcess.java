@@ -4,17 +4,13 @@ package com.univ;
  * Univ
  * 16/12/25 16:25
  */
-
 import com.univ.single.Single;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.metamodel.MetadataSources;
 import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 
 /**
  * 演示Hiberante的完整的简单使用流程

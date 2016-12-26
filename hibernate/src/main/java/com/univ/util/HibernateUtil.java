@@ -4,11 +4,11 @@ import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil {
-	static private Session session;
+	private static Session session;
 	static {
 		session = new Configuration().configure().buildSessionFactory().openSession();
 	}
-	static public Session getSession(){
+	public static Session getSession(){
 		return session;
 	}
 }
