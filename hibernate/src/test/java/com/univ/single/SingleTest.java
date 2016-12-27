@@ -1,6 +1,7 @@
 package com.univ.single;
 
 import com.univ.util.HibernateUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.After;
@@ -90,7 +91,7 @@ public class SingleTest {
         System.out.println(single.getName());
         single.setName("vvvv");//注意，如果需要看到输出语句的变化，这里需要改一下name的值。
         /*重点：
-		 * 调用get（或者load方法）方法先到session缓存中是否有id为1的Single，找到则返回，且返回最新的！
+         * 调用get（或者load方法）方法先到session缓存中是否有id为1的Single，找到则返回，且返回最新的！
 		 */
         System.out.println();
         Single single2 = (Single) session.get(Single.class, (long) 1);
@@ -109,9 +110,11 @@ public class SingleTest {
     }
 
     /**
-     * load()采取的是默认的延迟检索策略，但受class级别检索方式的影响(如果设置class级别lazy=false，load()将采用立即检索)
-     * 如果加载一个对象是为了删除它或者和别的对象建立关联关系，用load；
-     * 只有在访问single的非id属性时，才会执行select语句，否则整个过程（即使事务提交，session清除缓存）都不会有select语句的执行；
+     * 1. load()采取的是默认的延迟检索策略，但受class级别检索方式的影响(如果设置class级别lazy=false，load()将采用立即检索)；
+     * 2. 如果加载一个对象是为了删除它或者和别的对象建立关联关系，用load；
+     * 3. 只有在访问single的非id属性时，才会触发select语句；
+     * 4. load()方法返回的是Single的代理类对象，此代理对象仅仅只有OID有值，因为才有上面的3；这是重点。
+     * 5. 另参考proxyTest()方法；
      */
     @Test
     public void load() {
@@ -124,12 +127,12 @@ public class SingleTest {
         System.out.println("after single.getName()---------------------------");
         transaction.commit();
         session.close();
-        System.out.println(single.getName());//此时不会有输出，session已经关闭
     }
 
     /**
-     * get()采取的是立即检索策略，且还不受class级别设置的检索方式的影响，即get()始终采用立即检索
-     * 如果加载一个对象是为了访问它的属性，用get
+     * 1. get()采取的是立即检索策略，且不受class级别设置的检索方式的影响，即get()始终采用立即检索；
+     * 2. 如果加载一个对象是为了访问它的属性，用get()；
+     * 3. 因为get()总是采取立即检索，因此永远不会返回代理对象；
      */
     @Test
     public void get() {
@@ -138,9 +141,30 @@ public class SingleTest {
         System.out.println("after session.get()---------------------------");
         transaction.commit();
         session.close();
-        System.out.println(single.getName());
     }
 
+    /**
+     * 测试load()方法返回的代理类对象
+     * 1. 代理类的实例只能在当前Session范围内被初始化；
+     * 2. Hibernate.initialize()：显式初始化代理类实例；
+     *      Hibernate.isInitialized()：判断代理类实例是否已经被初始化
+     */
+    @Test
+    public void proxyTest() {
+        transaction = session.beginTransaction();
+        Single single = (Single) session.load(Single.class, (long) 1);
+        transaction.commit();
+        session.close();//session关闭
+
+        /*
+         * 1. 代理类的实例只能在当前Session范围内被初始化；
+         *  此时代理对象single已经不处于session范围内，抛出异常：
+         *  org.hibernate.LazyInitializationException: could not initialize proxy - no Session
+         * 2. Hibernate类的initialize()静态方法可在Session范围内显式初始化代理类实例；
+         *      isInitialized()方法可以判断代理类实例是否已经被初始化；
+         */
+        System.out.println(single.getName());
+    }
 
     @Before
     public void setUp() throws Exception {
