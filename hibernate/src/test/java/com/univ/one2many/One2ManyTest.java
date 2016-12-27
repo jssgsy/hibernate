@@ -1,15 +1,13 @@
 package com.univ.one2many;
 
+import com.univ.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.univ.util.HibernateUtil;
-
 import java.util.Date;
-import java.util.Set;
 
 /** 
  * @author: liuml

@@ -15,13 +15,16 @@
         </id>
         <property name="name" type="string" column="NAME"></property>
 
-        <!-- 建立和Order的一对多关系
-        一的一方只需要明确是哪个外键即可 -->
-        <!-- cascade="save-update":当保存和更新customer对象时会自动保存和更新与其关系的order对象;
-        	 inverse="true":Customer端若只有orders属性发生变化(如customer.getOrders().add(order))，
+        <!-- 1. 建立和Order的一对多关系,只需要通过key标签指明是哪个外键即可；
+             2. cascade="save-update":当保存和更新customer对象时会自动保存和更新与其关系的order对象;
+        	 3. inverse="true":Customer端若只有orders属性发生变化(如customer.getOrders().add(order))，
         	    则Customer端不发出update语句,亦即customer.getOrders().add(order)不会对数据库作出任何改动。
+        	 4. fetch:同时查询多个customer对象关联的所有order对象时，对Order查询发出的select语句的形式，没什么太大作用。
+        	        select：默认值；
+        	        subselect：采用子查询的select语句；
+        	        join:采用左外连接的select语句；
         -->
-        <set name="orders" cascade="save-update" inverse="true">
+        <set name="orders" cascade="save-update" inverse="true" fetch="select">
             <key column="CUSTOMER_ID"/>
             <one-to-many class="com.univ.one2many.Order"/>
         </set>
