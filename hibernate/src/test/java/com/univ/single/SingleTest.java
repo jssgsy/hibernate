@@ -109,9 +109,9 @@ public class SingleTest {
     }
 
     /**
-     * load()采取的是默认的延迟检索策略，如果加载一个对象是为了删除它或者和别的对象建立关联关系，用load；
+     * load()采取的是默认的延迟检索策略，但受class级别检索方式的影响(如果设置class级别lazy=false，load()将采用立即检索)
+     * 如果加载一个对象是为了删除它或者和别的对象建立关联关系，用load；
      * 只有在访问single的非id属性时，才会执行select语句，否则整个过程（即使事务提交，session清除缓存）都不会有select语句的执行；
-     * 延迟加载的对象在session关闭之后便不能再使用。
      */
     @Test
     public void load() {
@@ -128,8 +128,8 @@ public class SingleTest {
     }
 
     /**
-     * get()采取的是立即检索策略，如果加载一个对象是为了访问它的属性，用get
-     * session关闭后还能访问get返回的对象内容。
+     * get()采取的是立即检索策略，且还不受class级别设置的检索方式的影响，即get()始终采用立即检索
+     * 如果加载一个对象是为了访问它的属性，用get
      */
     @Test
     public void get() {
