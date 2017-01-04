@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * @author: liuml
  * @date: 2015年7月20日 上午11:07:00
@@ -178,6 +180,26 @@ public class SingleTest {
         System.out.println("end testing =============================");
     }
 
+    /*
+     重点：一个事务内，先保存/更新/删除，再查询，查询的是保存/更新/删除之后的结果！
+     */
+    @Test
+    public void saveThenGet(){
+        transaction = session.beginTransaction();
+        //先保存
+        Single single = new Single();
+        single.setId((long) 13);
+        single.setName("aaa");
+        session.save(single);
+
+        //再查询，可以查到保存后的结果
+        List<Single> list = session.createQuery("from com.univ.single.Single").list();
+        for (Single s : list) {
+            System.out.println(s.getId());
+        }
+        transaction.commit();
+        session.close();
+    }
 
 }
 
