@@ -1,5 +1,6 @@
 package com.univ.self;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /** 
@@ -9,13 +10,17 @@ import java.util.Set;
  * 演示双向一对多自身关联
 */
 
+/**
+ * 虽然只有一个类，但仍然需要parent和children两个属性，不能只有children;
+ */
+
 public class Example {
 	private Long id;
 	private String name;
 	private Integer age;
 	
 	private Example parent;
-	private Set<Example> children;
+	private Set<Example> children = new HashSet<Example>();
 	
 	public Example(){
 		

@@ -1,17 +1,12 @@
 package com.univ.self;
 
-import static org.junit.Assert.*;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
+import com.univ.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;
 
-import com.univ.util.HibernateUtil;
+import java.util.HashSet;
+import java.util.Set;
 
 /** 
  * @author	Univ 
@@ -66,7 +61,8 @@ public class ExampleTest {
 		
 		transaction = session.beginTransaction();
 		session.save(e1);
-//		session.save(e2);
+		session.save(e2);
+        //配置文件中在一方指定了cascade的值为save-update
 //		session.save(e3);
 //		session.save(e4);
 //		session.save(e5);
