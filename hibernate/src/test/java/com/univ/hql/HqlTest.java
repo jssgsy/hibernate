@@ -10,6 +10,7 @@ package com.univ.hql;
  */
 
 import com.univ.one2many.Order;
+import com.univ.self.Example;
 import com.univ.single.Single;
 import com.univ.util.HibernateUtil;
 import org.hibernate.Query;
@@ -232,6 +233,21 @@ public class HqlTest {
         List<Order> list = query.list();
         for (Order o:list) {
             System.out.println(o.getOrderNumber());
+        }
+    }
+
+    /**
+     * hql在自身一对多双向关联中的应用，其实和普通的一对多关系一样。
+     *
+     * 查询所有parent为null的记录，即顶层节点。
+     * 下面的查询其实只需要配置多对一单向映射即可。
+     */
+    @Test
+    public void test11(){
+
+        List<Example> list = session.createQuery("from com.univ.self.Example where parent.id is null").list();
+        for (Example example:list) {
+            System.out.println(example.getName());
         }
     }
 
