@@ -18,6 +18,7 @@ import org.hibernate.Transaction;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 使用hql的大致步骤
@@ -32,7 +33,7 @@ public class HqlTest {
     private Transaction transaction = null;
 
     /**
-     * 单表查询，不带参数
+     * 单表查询，不带参数，查询对象
      *
      * 类使用全路径名(在没有二义性的情况下可以只使用类名)；
      */
@@ -84,17 +85,149 @@ public class HqlTest {
     }
 
     /**
+     * 单表查询，只查询一列
+     * 重点：返回的List中的对象类型是所查询列的类型
+     */
+    @Test
+    public void test4(){
+        String queryString = "select single.name from com.univ.single.Single single " +
+                " where single.age = :ageParam";
+        Query query = session.createQuery(queryString);
+        query.setInteger("ageParam", 21);
+
+        //注意此时List里的对象String类型
+        List<String> list = query.list();
+        for (String s:list) {
+            System.out.println(s);
+        }
+    }
+
+    /**
+     * 单表查询，查询多列
+     * 此时List中的对象类型是Object[]
+     */
+    @Test
+    public void test5(){
+        String queryString = "select single.name, single.age from " +
+                " com.univ.single.Single single where single.age = :ageParam";
+        Query query = session.createQuery(queryString);
+        query.setInteger("ageParam", 21);
+
+        //注意此时List里的对象是Object[]类型
+        List<Object[]> list = query.list();
+        for (Object[] o:list) {
+            System.out.println(o[0]);
+            System.out.println(o[1]);
+        }
+    }
+
+    /**
+     * 单表查询，查询多列，对test5的补充
+     *
+     * 此时
+     * 1. 需要为Single类添加相应的带参构造陈函数，当然无参构造函数也不能少；
+     * 2. List中的对象类型是Single
+     */
+    @Test
+    public void test6(){
+        String queryString = "select new com.univ.single.Single(single.name, single.age) from " +
+                " com.univ.single.Single single where single.age = :ageParam";
+        Query query = session.createQuery(queryString);
+        query.setInteger("ageParam", 21);
+
+        //注意此时List里的对象是Single类型
+        List<Single> list = query.list();
+        for (Single s:list) {
+            System.out.println(s.getName());
+            System.out.println(s.getAge());
+        }
+    }
+
+    /**
+     * 单表查询，查询多列，对test6的补充
+     *
+     * 1. 注意是new list,小写的list，注意hql没有提供new set；
+     * 2. List中list的个数即是查询返回的行数，一行对应一个list
+     */
+    @Test
+    public void test7(){
+        String queryString = "select new list (single.name, single.age) from " +
+                " com.univ.single.Single single where single.age = :ageParam";
+        Query query = session.createQuery(queryString);
+        query.setInteger("ageParam", 21);
+
+        //注意此时List里的对象是List类型
+        List<List> list = query.list();
+        for (List s:list) {
+            for (Object o : s) {
+                System.out.println(o);
+            }
+        }
+    }
+
+    /**
+     * 单表查询，查询多列，对test7的补充
+     *
+     * 1. 是new map,小写的map;
+     * 2. 没有给列名起别名时，map的key为字符串形式的下标，注意是字符串形式的下标，不是数字形式的下标；
+     * 3. list中map的个数就是查询返回的行数，即一行数据对应一个map；
+     * 4. 此时map的内容：
+     *      "0" : single.name;
+     *      "1" : single.age
+     */
+    @Test
+    public void test8(){
+        //不给列名起别名
+        String queryString = "select new map(single.name, single.age) from " +
+                " com.univ.single.Single single where single.age = :ageParam";
+        Query query = session.createQuery(queryString);
+        query.setInteger("ageParam", 21);
+
+        //注意此时List里的对象是Map类型
+        List<Map> list = query.list();
+        for (Map m:list) {
+            /*
+            注意这里是get("0),而不是get(0),是字符串形式的下标
+             */
+            System.out.println(m.get("0") + " : " + m.get("1"));
+        }
+    }
+
+    /**
+     * 单表查询，查询多列，对test8的补充
+     *
+     * 1. 给列名起别名时，map的key为别名；
+     * 2. 此时map的内容：
+     *      "name" : single.name;
+     *      "age" : single.age
+     */
+    @Test
+    public void test9(){
+        //给列名起别名
+        String queryString = "select new map(single.name as name, single.age as age) from " +
+                " com.univ.single.Single single where single.age = :ageParam";
+        Query query = session.createQuery(queryString);
+        query.setInteger("ageParam", 21);
+
+        //此时List里的对象是Map类型
+        List<Map> list = query.list();
+        for (Map m:list) {
+            System.out.println(m.get("name") + " : " + m.get("age"));
+        }
+    }
+
+    /**
      * 关联查询
      *
      * 使用字符串拼接时关键字(如这里的from和where)前后最好空格，否则会导致sql语句的错误;
      * 注意语法：where cus.id = o.customer.id，始终记住：hql是面向对象的查询;
      */
     @Test
-    public void test4(){
+    public void test10(){
         String queryString = "select o from " +
                 " com.univ.one2many.Customer cus, com.univ.one2many.Order o " +
                 "where cus.id = o.customer.id";
-        
+
         Query query = session.createQuery(queryString);
         List<Order> list = query.list();
         for (Order o:list) {

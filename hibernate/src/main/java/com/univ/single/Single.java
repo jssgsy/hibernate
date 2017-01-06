@@ -15,7 +15,16 @@ public class Single {
 	private String name;
 	private int age;
 	private Date date;
-	public Long getId() {
+
+    public Single(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public Single() {
+    }
+
+    public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {//设置为private，防止应用程序为主键赋值
