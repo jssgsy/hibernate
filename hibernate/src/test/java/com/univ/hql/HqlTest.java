@@ -37,6 +37,7 @@ public class HqlTest {
      * 单表查询，不带参数，查询对象
      *
      * 类使用全路径名(在没有二义性的情况下可以只使用类名)；
+     * list()方法只支持session缓存写入，不支持读取。见test14
      */
     @Test
     public void test1(){
@@ -250,6 +251,41 @@ public class HqlTest {
             System.out.println(example.getName());
         }
     }
+
+    /**
+     * uniqueResult()：如果确保只能查找到一个结果，可使用此快捷方法(否则得list.get(0))
+     *
+     * 找到多个结果抛出异常;
+     * 一个结果没有找到返回null;
+     */
+    @Test
+    public void test12(){
+        Query query = session.createQuery("from com.univ.self.Example where id = 11");
+        Example example = (Example) query.uniqueResult();
+        System.out.println(example.getName());
+    }
+
+    /**
+     * Hibernate分页操作
+     *  setFirstResult(index)——从id为(index+1)处开始查找,index从0开始
+     *  setMaxResults(num)——一次最多查找几条
+     *
+     *      两个方法的参数分别对应于limit子句的两个参数，不过查询时实际上是从index+1的id处开始查找，
+     *      之所以如此，可能是因为面向对象中索引都是从0开始，但数据库中id值最小为1
+     *
+     */
+    @Test
+    public void test13(){
+        Query query = session.createQuery("from com.univ.self.Example");
+        //从id为1的记录开始查找，最多查找3条
+        query.setFirstResult(0);
+        query.setMaxResults(3);
+        List<Example> list = query.list();
+        for (Example example:list) {
+            System.out.println(example.getName());
+        }
+    }
+
 
 
 }
