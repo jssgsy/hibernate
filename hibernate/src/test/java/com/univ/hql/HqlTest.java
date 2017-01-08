@@ -18,6 +18,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -286,6 +287,59 @@ public class HqlTest {
         }
     }
 
+    /**
+     * list()
+     * 1. 采取立即检索策略
+     * 2. 只支持往session缓存中写入，
+     * 3. 不支持从session缓存中读(想想也是，因为list()是一次查找所有的数据，不应该到session中一个一个去比较)
+     */
+    @Test public void test14(){
+        Query query = session.createQuery("from com.univ.self.Example");
+        //1. 会立刻发送sql查询语句
+        List list = query.list();
+        System.out.println("------------");
+
+        //2. 此时get()方法不会发送sql语句，因为list()方法支持往session缓存中写入
+        System.out.println("before get()...");
+        session.get(Example.class, (long) 1);
+        System.out.println("after get()...");
+
+        //3。 此时会重新发送sql查询语句，即list()不支持session缓存读
+        List list1 = query.list();
+        System.out.println(".........");
+    }
+
+    /** iterate()方法
+     * 1. 采取是延迟检索策略；
+     * 2. 查询出的结果会放入session缓存中(即支持session缓存的写入)；
+     * 3. 查询之前会先到session缓存中查看是否已经存在(即支持session的读取)；
+     *
+     * 注意和list()方法在session缓存方面的区别
+     * */
+    @Test public void test15(){
+        Query query = session.createQuery("from com.univ.self.Example");
+        //iterate()是延迟检索，不过这里会先检索出所有的id
+        Iterator iterate1 = query.iterate();
+        System.out.println("after iterate()...");
+
+        while (iterate1.hasNext()) {
+            Example example = (Example) iterate1.next();
+            //1. iterate采用的是延迟检索，直到调用getName()方法时才真正发出sql查询语句
+            System.out.println(example.getName());
+        }
+
+        //2. 此时get()方法不会发送sql语句，因为iterate()方法支持往session缓存中写入
+        System.out.println("before get()...");
+        session.get(Example.class, (long) 1);
+        System.out.println("after get()...");
+
+        //3. 此时不会再发送sql查询语句，因为iterate方法支持session缓存读
+        Iterator iterate2 = query.iterate();
+        while (iterate2.hasNext()) {
+            Example example = (Example) iterate2.next();
+            System.out.println(example.getName());
+        }
+    }
 
 
 }
