@@ -18,6 +18,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;
 
+import javax.naming.Name;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -339,6 +341,72 @@ public class HqlTest {
             Example example = (Example) iterate2.next();
             System.out.println(example.getName());
         }
+    }
+
+    /**
+     * hql的模糊查询
+     *
+     * 其实也就是参数绑定的问题.
+     * 注意应该将匹配符在绑定参数时设置，而不要放到like子句中。
+     */
+    @Test
+    public void test16(){
+        //这里没有“%”
+        Query query = session.createQuery("from com.univ.single.Single where name like :name");
+
+        //“%”出现在这里
+        query.setString("name", "%b%");
+        List<Single> list = query.list();
+        for (Single s:list) {
+            System.out.println(s.getName());
+        }
+    }
+
+    /**
+     * hql的集合查询(in)  setParameterList(...)
+     *
+     * 其实也就是参数绑定的问题.不过：
+     *  1. 参数(:name)需要用括号括起来；
+     *  2. 既然是多个值，所以可以使用集合或者数组。
+     */
+    @Test
+    public void test17(){
+        //注意这里需要将“:name”括号起来
+        Query query = session.createQuery("from com.univ.single.Single where id in (:name)");
+
+        //这里用的数组存储多个值
+        query.setParameterList("name", new Object[]{(long) 1, (long)2, (long)3,(long)4});
+
+        //这里用集合存储多个值
+        /*List list1 = new ArrayList();
+        list1.add((long)1);
+        list1.add((long)2);
+        list1.add((long)3);
+        list1.add((long)4);
+        query.setParameterList("name", list1);*/
+
+        List<Single> list = query.list();
+        for (Single s:list) {
+            System.out.println(s.getName());
+        }
+    }
+
+    /**
+     * hql 聚合函数的使用
+     * 1. 因为只有一个结果，可以使用uniqueResult()方法；
+     * 2. 在强制类型转换时，id是什么类型则能转成什么类型,如id是Long类型，则不能转换成Integer类型；
+     * 3. 因为上述2的缘故，一般转换成Number而不是具体的类型；
+     */
+    @Test
+    public void test18(){
+        Query query = session.createQuery("select count(*) from com.univ.single.Single");
+
+        //id的类型是Long，所以uniqueResult()只能转成Long而不能是Integer
+        //long count = ((Long)query.uniqueResult()).intValue();
+
+        //转成Number是最好的，因为不论是Long还是Integer都可以接收
+        int count = ((Number)query.uniqueResult()).intValue();
+        System.out.println(count + "............");
     }
 
 
