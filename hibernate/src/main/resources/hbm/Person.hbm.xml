@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.univ.one2one.Person" table="person">
+        <id name="id">
+            <generator class="increment"></generator>
+        </id>
+        <property name="name"></property>
+
+        <!--
+            设置Person与IDCard的单向一对一关联。这里采取的是外键关联的一对一，外键设在Person端。
+            外键关联的一对一其实就是退化的多对一，所有只需要利用many-to-one配置即可，这里的Person相当于是多方。
+            不过需要设置unique="true"表示只能有一个Person和某一个IDCard关联
+        -->
+        <many-to-one name="idCard" column="idCard_id" unique="true"/>
+
+    </class>
+</hibernate-mapping>

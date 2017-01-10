@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.univ.one2one.IDCard" table="idCard">
+        <id name="id">
+            <generator class="increment"></generator>
+        </id>
+        <property name="number" column="number"></property>
+
+        <!--
+            配置和Person的一对一关系。
+            property-ref (optional):
+                the name of a property of the associated class that is joined to this foreign key.
+                If not specified, the primary key of the associated class is used.
+
+            这样理解property-ref：
+                当要从Person(退化的多方)导航到IDCard时，获取person中的外键值x，然后到idcard表中找id为x的记录即可；
+                当要从IDCard导航到Person时，有了idCard的id x，到person表中找相应的记录时参考的列是这里指定的idCard属性。
+                例子：假设要打idCard id为100的记录关联的person记录，要么会到person表中找idCard对应的列的值为100的记录，
+                    如果这里不配置property-ref，则会找person表中主键为100的记录！
+            由此可知，不要少property-ref。
+        -->
+        <one-to-one name="person" class="com.univ.one2one.Person" property-ref="idCard"/>
+
+    </class>
+</hibernate-mapping>
