@@ -9,6 +9,7 @@ package com.univ.hql;
  * 测试Hibernate hql的相关知识，这里的查询基于其它类.
  */
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import com.univ.one2many.Order;
 import com.univ.self.Example;
 import com.univ.single.Single;
@@ -409,5 +410,23 @@ public class HqlTest {
         System.out.println(count + "............");
     }
 
+    /**
+     * hql在多对一关联查询采取是迟延检索
+     */
+    @Test
+    public void test19(){
+
+        Query query = session.createQuery("from com.univ.one2many.Order");
+        System.out.println("before list()");
+        List<Order> list = query.list();
+        System.out.println("after list()");
+
+        //此时不会触发对一方Customer表的查询
+        System.out.println(list.get(0).getOrderNumber());
+        System.out.println(list.get(0).getCustomer().getId());
+
+        //此时将真正触发对一方Customer表的查询
+        System.out.println(list.get(0).getCustomer().getName());
+    }
 
 }
