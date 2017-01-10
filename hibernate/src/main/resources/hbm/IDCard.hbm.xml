@@ -23,6 +23,8 @@
                 例子：假设要打idCard id为100的记录关联的person记录，要么会到person表中找idCard对应的列的值为100的记录，
                     如果这里不配置property-ref，则会找person表中主键为100的记录！
             由此可知，不要少property-ref。
+            其实property-ref类似于配置一对多关系的set标签中的key标签指定的值，只是key标签指定的是外键对应的列，
+            而property-ref指定的是外键对应的属性
         -->
         <one-to-one name="person" class="com.univ.one2one.Person" property-ref="idCard"/>
 
