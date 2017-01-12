@@ -37,8 +37,8 @@
     <mapping resource="hbm/IDCard.hbm.xml" />
 
     <!--单向多对多关联-->
-    <mapping resource="hbm/many2many/oneway/Category.hbm.xml"/>
-    <mapping resource="hbm/many2many/oneway/Item.hbm.xml"/>
+    <mapping resource="hbm/many2many/oneway/CategoryOne.hbm.xml"/>
+    <mapping resource="hbm/many2many/oneway/ItemOne.hbm.xml"/>
 
 </session-factory>
 
