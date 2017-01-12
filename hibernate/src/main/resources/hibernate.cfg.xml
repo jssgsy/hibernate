@@ -36,6 +36,10 @@
     <mapping resource="hbm/Person.hbm.xml" />
     <mapping resource="hbm/IDCard.hbm.xml" />
 
+    <!--单向多对多关联-->
+    <mapping resource="hbm/many2many/oneway/Category.hbm.xml"/>
+    <mapping resource="hbm/many2many/oneway/Item.hbm.xml"/>
+
 </session-factory>
 
 </hibernate-configuration>
