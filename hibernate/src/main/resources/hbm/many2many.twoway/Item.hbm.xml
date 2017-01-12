@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.univ.many2many.twoway.Item" table="item" >
+        <id name="id">
+            <generator class="increment"></generator>
+        </id>
+        <property name="name"></property>
+
+        <!--
+            双向的多对多配置就是两个单向多对多配置的简单叠加。
+            1. 两方都可用set加many-to-many标签来配置多对多关系；
+            2. 两方都需要指定中间表以及各自在中间表中的外键；
+            3. 必须有一方的inverse设置为true;
+
+            table:指定中间表，在Category端也需要指定，注意要是同一个表名；
+            可在双方都设置cascade="save-update"
+        -->
+        <set name="categorySet" table="category_item" cascade="save-update">
+            <!--
+                和一对多配置中key标签的作用一样，用来指定category在中间表中对应的外键，
+                注意和Category端指定的名称一致
+            -->
+            <key column="item_id"></key>
+            <!--column用来指定item表在中间表中对应的外键，注意和Category端指定的名称一致-->
+            <many-to-many column="category_id" class="com.univ.many2many.twoway.Category"/>
+        </set>
+    </class>
+</hibernate-mapping>

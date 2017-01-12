@@ -1,4 +1,4 @@
-package com.univ.many2many;
+package com.univ.many2many.oneway;
 
 import com.univ.many2many.oneway.CategoryOne;
 import com.univ.many2many.oneway.ItemOne;
@@ -13,7 +13,7 @@ import java.util.Set;
  * Univ
  * 2017/1/12 19:13
  */
-public class Many2ManyTest {
+public class Many2ManyOneWayTest {
     private Session session = HibernateUtil.getSession();
     private Transaction transaction = null;
 

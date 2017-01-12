@@ -40,6 +40,10 @@
     <mapping resource="hbm/many2many/oneway/CategoryOne.hbm.xml"/>
     <mapping resource="hbm/many2many/oneway/ItemOne.hbm.xml"/>
 
+    <!--双向多对多关联-->
+    <mapping resource="hbm/many2many.twoway/Category.hbm.xml"/>
+    <mapping resource="hbm/many2many.twoway/Item.hbm.xml"/>
+
 </session-factory>
 
 </hibernate-configuration>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.univ.many2many.twoway.Category" table="category" >
+        <id name="id">
+            <generator class="increment"></generator>
+        </id>
+        <property name="name"></property>
+
+        <set name="itemSet" table="category_item" cascade="save-update">
+            <!--
+                和一对多配置中key标签的作用一样，用来指定category在中间表中对应的外键；
+            -->
+            <key column="category_id"></key>
+            <!--column用来指定item表在中间表中对应的外键-->
+            <many-to-many class="com.univ.many2many.twoway.Item" column="item_id"/>
+        </set>
+
+    </class>
+</hibernate-mapping>
