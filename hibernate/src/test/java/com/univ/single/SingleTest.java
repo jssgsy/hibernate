@@ -140,6 +140,7 @@ public class SingleTest {
     public void get() {
         transaction = session.beginTransaction();
         Single single = (Single) session.get(Single.class, (long) 1);//立即执行select语句
+        System.out.println("总记录数为： "  + single.getCount());
         System.out.println("after session.get()---------------------------");
         transaction.commit();
         session.close();

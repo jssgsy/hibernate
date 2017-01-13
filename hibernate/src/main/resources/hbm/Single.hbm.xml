@@ -15,5 +15,14 @@
         <property name="age"></property>
         <property name="date" column="date" type="date"></property>
 
+        <!--
+            映射派生属性count，这里用来求表中的总记录数(在分页的情况下有用，当然也可以用来表示其它含义，如求平均值等
+            1. formula用来设置一个SQL查询语句，Hibernate将根据这个来计算派生属性的值；
+            2. 经实验验证，formula指定的查询语句将被当作子查询，因此必须在前后加上括号，否则生成的语法有问题；
+            3. 就这个求总记录的例子而言，不能写成count(id)，否则报子查询的结果多于一条的错误；
+            4. 派生属性不对应于表中的字段，因此这里没有指定column;
+        -->
+        <property name="count" formula="(select count(*) from single)"/>
+
     </class>
 </hibernate-mapping>
