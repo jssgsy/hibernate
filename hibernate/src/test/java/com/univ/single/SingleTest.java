@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author: liuml
@@ -201,6 +203,72 @@ public class SingleTest {
         transaction.commit();
         session.close();
     }
+
+    /**
+     * 对集合属性映射的测试
+     */
+    @Test
+    public void collectionSaveTest(){
+        Single s = new Single();
+        s.setName("single");
+
+        //数组属性
+        String[] strArr = {"arr1", "arr2", "arr3", "arr4"};
+        s.setStrArr(strArr);
+        //list属性
+        s.getList().add("list1");
+        s.getList().add("list2");
+        s.getList().add("list3");
+        s.getList().add("list4");
+        //set属性
+        s.getSet().add("set1");
+        s.getSet().add("set2");
+        s.getSet().add("set3");
+        s.getSet().add("set4");
+        //map属性
+        s.getMap().put("key1", "val1");
+        s.getMap().put("key2", "val2");
+        s.getMap().put("key3", "val3");
+        s.getMap().put("key4", "val4");
+
+        transaction = session.beginTransaction();
+        session.save(s);
+        transaction.commit();
+        session.close();
+    }
+
+    @Test
+    public void collectionGetTest(){
+        Single s = (Single) session.get(Single.class, (long) 4);
+        String[] strArr = s.getStrArr();
+        System.out.print("数组属性的值有：");
+        for (String o : strArr) {
+            System.out.print(o + "  ");
+        }
+        System.out.println();
+
+        System.out.print("list属性的值有：");
+        List<String> list = s.getList();
+        for (String o : list) {
+            System.out.print(o + "  ");
+        }
+        System.out.println();
+
+        System.out.print("set属性的值有：");
+        Set<String> set = s.getSet();
+        for (String o : set) {
+            System.out.print(o + "  ");
+        }
+        System.out.println();
+
+        System.out.print("map属性的值有：");
+        Map<String, String> map = s.getMap();
+        for (Map.Entry  entry : map.entrySet()) {
+            System.out.print(entry.getKey() + " : " + entry.getValue() + "  ");
+        }
+
+    }
+
 
 }
 

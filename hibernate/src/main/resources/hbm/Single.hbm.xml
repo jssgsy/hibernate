@@ -24,5 +24,56 @@
         -->
         <property name="count" formula="(select count(*) from single)"/>
 
+        <!--
+            在映射集合方面，Hibernate好像还不能很好的反射出元素的类型，因此最好指定type.
+            集合属性数组的映射
+            table：指定中间表的名称；
+        -->
+        <array name="strArr" table="single_array">
+            <!--指定此表在中间表中的外键-->
+            <key column="singleId"></key>
+            <!--数组索引在中间表中对应的列名-->
+            <index column="arrIndex"/>
+            <!--数组元素在中间表中对应的列名-->
+            <element column="arrVal" type="java.lang.String"/>
+        </array>
+
+        <!--
+            集合属性list的映射,与数组的映射本质一模一样
+            table：指定中间表的名称；
+        -->
+        <list name="list" table="single_list">
+            <!--指定此表在中间表中的外键-->
+            <key column="singleId"></key>
+            <!--list索引在中间表中对应的列名-->
+            <list-index column="listIndex"/>
+            <!--list元素在中间表中对应的列名-->
+            <element column="listVal" type="java.lang.String"/>
+        </list>
+
+        <!--
+           集合属性set的映射
+           table：指定中间表的名称；
+       -->
+        <set name="set" table="single_set">
+            <!--指定此表在中间表中的外键-->
+            <key column="single_id"></key>
+            <!--set元素在中间表中对应的列名-->
+            <element column="setVal" type="java.lang.String"/>
+        </set>
+
+        <!--
+          集合属性map的映射
+          table：指定中间表的名称；
+      -->
+        <map name="map" table="single_map">
+            <!--指定此表在中间表中的外键-->
+            <key column="single_id"></key>
+            <!--key在中间表中对应的列名-->
+            <map-key type="java.lang.String" column="mapKey"/>
+            <!--value在中间表中对应的列名-->
+            <element type="java.lang.String" column="mapVal"/>
+        </map>
+
     </class>
 </hibernate-mapping>
